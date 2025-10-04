@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinCat - Financial Education Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="translations.js"></script>
+</head>
+<body>
+    <!-- Language Selection Modal -->
+    <div id="languageModal" class="modal">
+        <div class="modal-content language-modal">
+            <div class="language-header">
+                <div class="language-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h2 data-translate="selectLanguage">Select your language</h2>
+                <p data-translate="languagePrompt">Choose your preferred language to continue</p>
+            </div>
+            <div class="language-options">
+                <button class="language-btn" data-lang="en">
+                    <span class="lang-name" data-translate="english">English</span>
+                </button>
+                <button class="language-btn" data-lang="es">
+                    <span class="lang-name" data-translate="spanish">Español</span>
+                </button>
+                <button class="language-btn" data-lang="ca">
+                    <span class="lang-name" data-translate="catalan">Català</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content auth-modal">
+            <!-- Welcome Section -->
+            <div class="auth-header">
+                <div class="welcome-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h2 data-translate="welcome">Welcome to FinCat!</h2>
+                <div class="auth-description">
+                    <p data-translate="signInMessage">Sign in or create an account to begin your financial learning adventure</p>
+                </div>
+            </div>
+            
+            <!-- Auth Forms Container -->
+            <div class="auth-forms-container">
+                <!-- Signup Form -->
+                <div id="signupForm" class="auth-form">
+                    <h3 data-translate="createAccount">Create Account</h3>
+                    <form id="signupFormElement">
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="signupUsername" data-translate-placeholder="chooseUsername" placeholder="Choose username" maxlength="20" autocomplete="username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="signupPassword" data-translate-placeholder="choosePassword" placeholder="Choose password" minlength="6" autocomplete="new-password" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="confirmPassword" data-translate-placeholder="confirmPassword" placeholder="Confirm password" minlength="6" autocomplete="new-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="createAccount">Create Account</span>
+                        </button>
+                    </form>
+                    <p class="auth-switch"><span data-translate="alreadyHaveAccount">Already have an account?</span> <a href="#" id="switchToLogin" data-translate="loginHere">Login here</a></p>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-form" style="display: none;">
+                    <h3 data-translate="login">Login</h3>
+                    <form id="loginFormElement">
+                        <div class="input-group">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="loginUsername" data-translate-placeholder="username" placeholder="Username" maxlength="20" autocomplete="username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="loginPassword" data-translate-placeholder="password" placeholder="Password" autocomplete="current-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="login">Login</span>
+                        </button>
+                    </form>
+                    <p class="auth-switch"><span data-translate="dontHaveAccount">Don't have an account?</span> <a href="#" id="switchToSignup" data-translate="signUpHere">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>💎</span>
+            <span>FinCat</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" data-page="home" class="nav-link active">
+                <span data-translate="home">Home</span>
+                <div class="nav-tooltip" data-translate="homeTooltip">View your profile and statistics</div>
+            </a>
+            <a href="#" data-page="budget" class="nav-link">
+                <span data-translate="budget">Budget</span>
+                <div class="nav-tooltip" data-translate="budgetTooltip">Manage your income and expenses</div>
+            </a>
+            <a href="#" data-page="quizzes" class="nav-link">
+                <span data-translate="quizzes">Quizzes</span>
+                <div class="nav-tooltip" data-translate="quizzesTooltip">Test your financial knowledge</div>
+            </a>
+            <a href="#" data-page="challenges" class="nav-link">
+                <span data-translate="challenges">Challenges</span>
+                <div class="nav-tooltip" data-translate="challengesTooltip">Complete saving and investment challenges</div>
+            </a>
+            <a href="#" data-page="groups" class="nav-link">
+                <span data-translate="myGroup">My Group</span>
+                <div class="nav-tooltip" data-translate="groupsTooltip">Join classes and study groups</div>
+            </a>
+            <a href="#" data-page="extras" class="nav-link">
+                <span data-translate="extras">Extras</span>
+                <div class="nav-tooltip" data-translate="extrasTooltip">Calculators and educational resources</div>
+            </a>
+            <a href="#" data-page="profile" class="nav-link">
+                <span data-translate="profile">Profile</span>
+                <div class="nav-tooltip" data-translate="profileTooltip">Edit your profile and preferences</div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="dashboard">
+                <div class="welcome-section">
+                    <h1><span data-translate="welcomeBackFull">Welcome back,</span> <span id="usernameDisplay"></span>!</h1>
+                    <div class="level-info">
+                        <div class="level-badge"><span data-translate="level">Level</span> <span id="currentLevel">1</span></div>
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="xpBar"></div>
+                            <span class="xp-text"><span id="currentXP">0</span> / <span id="nextLevelXP">100</span> XP</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-brain"></i>
+                        <h3 data-translate="quizzesCompleted">Quizzes Completed</h3>
+                        <span id="quizzesCompleted">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <h3 data-translate="challengesCompleted">Challenges Completed</h3>
+                        <span id="challengesCompleted">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-medal"></i>
+                        <h3 data-translate="achievements">Achievements</h3>
+                        <span id="achievementsCount">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-piggy-bank"></i>
+                        <h3 data-translate="currentBalance">Current Balance</h3>
+                        <span id="currentBalance">€0.00</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Budget Page -->
+        <div id="budget" class="page">
+            <h1 data-translate="personalBudget">Personal Budget</h1>
+            <div class="budget-overview">
+                <div class="budget-card income">
+                    <h3 data-translate="totalIncome">Total Income</h3>
+                    <span id="totalIncome">€0.00</span>
+                </div>
+                <div class="budget-card expenses">
+                    <h3 data-translate="totalExpenses">Total Expenses</h3>
+                    <span id="totalExpenses">€0.00</span>
+                </div>
+                <div class="budget-card balance">
+                    <h3 data-translate="balance">Balance</h3>
+                    <span id="budgetBalance">€0.00</span>
+                </div>
+            </div>
+
+            <div class="budget-actions">
+                <button class="btn btn-success" id="addIncomeBtn">
+                    <i class="fas fa-plus"></i> <span data-translate="addIncome">Add Income</span>
+                </button>
+                <button class="btn btn-danger" id="addExpenseBtn">
+                    <i class="fas fa-minus"></i> <span data-translate="addExpense">Add Expense</span>
+                </button>
+            </div>
+
+            <div class="budget-charts">
+                <div class="chart-container">
+                    <h3 data-translate="expenseCategories">Expense Categories</h3>
+                    <canvas id="expenseChart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 data-translate="incomeCategories">Income Categories</h3>
+                    <canvas id="incomeChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="ai-assistant-section">
+                <h3 data-translate="aiFinancialAssistant">AI Financial Assistant</h3>
+                <div class="ai-chat-container">
+                    <div id="aiChatHistory" class="ai-chat-history">
+                        <div class="ai-message">
+                            <div class="ai-avatar">🤖</div>
+                            <div class="ai-content">
+                                <span data-translate="aiWelcomeMessage">Hello! I'm your financial assistant. I can analyze your expenses and income to provide personalized tips. Ask me anything about your finances!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-input-container">
+                        <input type="text" id="aiQuestionInput" data-translate-placeholder="askAIQuestion" placeholder="Ask me about your finances..." maxlength="500">
+                        <button id="aiSubmitBtn" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="ai-suggestions">
+                        <p data-translate="suggestionQuestions">Try asking:</p>
+                        <button class="suggestion-btn" data-question="analyze-spending">💡 <span data-translate="analyzeSpending">Analyze my spending patterns</span></button>
+                        <button class="suggestion-btn" data-question="save-money">💰 <span data-translate="howToSave">How can I save more money?</span></button>
+                        <button class="suggestion-btn" data-question="budget-tips">📊 <span data-translate="budgetTips">Give me budget tips</span></button>
+                        <button class="suggestion-btn" id="clearChatBtn">🗑️ <span data-translate="clearChat">Clear Chat</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transactions-section">
+                <h3 data-translate="recentTransactions">Recent Transactions</h3>
+                <div id="transactionsList" class="transactions-list">
+                    <p class="no-transactions" data-translate="noTransactionsMessage">No transactions yet. Add your first income or expense!</p>
+                </div>
+            </div>
+
+            <div class="budget-education">
+                <h3 data-translate="budgetGuideTitle">Personal Budget Guide</h3>
+                <div class="budget-tips-grid">
+                    <div class="tip-card income-tip">
+                        <h4>💵 <span data-translate="incomeGuideTitle">Income</span></h4>
+                        <ul>
+                            <li data-translate="incomeGuideTip1">Include all your regular income sources</li>
+                            <li data-translate="incomeGuideTip2">Count both fixed and variable income</li>
+                            <li data-translate="incomeGuideTip3">Consider additional income (freelance, dividends)</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card expense-tip">
+                        <h4>💸 <span data-translate="expenseGuideTitle">Expenses</span></h4>
+                        <ul>
+                            <li><strong data-translate="fixedExpenses">Fixed:</strong> <span data-translate="fixedExpensesList">Rent, mortgage, insurance</span></li>
+                            <li><strong data-translate="variableExpenses">Variable:</strong> <span data-translate="variableExpensesList">Food, transport, entertainment</span></li>
+                            <li><strong data-translate="occasionalExpenses">Occasional:</strong> <span data-translate="occasionalExpensesList">Gifts, holidays, emergencies</span></li>
+                        </ul>
+                    </div>
+                    <div class="tip-card savings-tip">
+                        <h4>🎯 <span data-translate="goalsGuideTitle">Goals</span></h4>
+                        <ul>
+                            <li data-translate="goalGuideTip1">Define short and long-term goals</li>
+                            <li data-translate="goalGuideTip2">Prioritize emergency fund</li>
+                            <li data-translate="goalGuideTip3">Plan for retirement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quizzes Page -->
+        <div id="quizzes" class="page">
+            <h1 data-translate="financialQuizzes">Financial Quizzes</h1>
+            <div id="quizzesList" class="quizzes-list">
+                <!-- Quizzes will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Challenges Page -->
+        <div id="challenges" class="page">
+            <h1 data-translate="financialChallenges">Financial Challenges</h1>
+            <div id="challengesList" class="challenges-list">
+                <!-- Challenges will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Groups Page -->
+        <div id="groups" class="page">
+            <h1 data-translate="groupsClans">Classes & Groups</h1>
+            <div id="groupSection">
+                <div id="noGroupSection">
+                    <div class="group-actions">
+                        <button class="btn white-btn" id="createGroupBtn">
+                            <i class="fas fa-plus-circle"></i>
+                            <span data-translate="createClass">Create Class</span>
+                        </button>
+                        <button class="btn white-btn" id="joinGroupBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="joinClass">Join Class</span>
+                        </button>
+                    </div>
+                    
+                    <div class="group-features-centered">
+                        <div class="group-features">
+                            <h3><span data-translate="classFeatures">Class Features</span></h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-brain"></i> <span data-translate="takeCustomQuizzes">Take custom quizzes created by your teacher</span></li>
+                                <li><i class="fas fa-trophy"></i> <span data-translate="completeClassChallenges">Complete class challenges and earn rewards</span></li>
+                                <li><i class="fas fa-chart-line"></i> <span data-translate="trackProgress">Track your progress on the class leaderboard</span></li>
+                                <li><i class="fas fa-users"></i> <span data-translate="collaborateClassmates">Collaborate with classmates in your learning journey</span></li>
+                                <li><i class="fas fa-medal"></i> <span data-translate="competeTopSpot">Compete for the top spot in your class</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="groupDashboard" style="display: none;">
+                    <!-- Group dashboard content -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Extras Page -->
+        <div id="extras" class="page">
+            <h1 data-translate="extrasPage">Extras</h1>
+            <div class="extras-menu">
+                <div class="extras-intro">
+                    <h2 data-translate="extrasIntroTitle">Additional Educational Resources</h2>
+                    <p data-translate="extrasIntroDescription">Access calculators, guides and resources to improve your financial knowledge</p>
+                </div>
+                
+                <div class="extras-options">
+                    <div class="extras-option-card" data-page="educational-resources">
+                        <div class="option-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 data-translate="educationalResourcesTitle">Educational Resources</h3>
+                        <p data-translate="educationalResourcesDescription">Essential financial concepts, practical tips and learning guides</p>
+                        <div class="option-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="extras-option-card" data-page="compound-calculator">
+                        <div class="option-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3 data-translate="compoundInterestCalculator">Compound Interest Calculator</h3>
+                        <p data-translate="calculatorDescription">Simulate the growth of your savings and investments over time</p>
+                        <div class="option-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Resources Page -->
+        <div id="educational-resources" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-page="extras">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-translate="backToExtras">Tornar a Extras</span>
+                </button>
+                <h1 data-translate="educationalResourcesTitle" class="educational-title">Educational Resources for Financial Learning</h1>
+            </div>
+            
+            <div class="extras-content">
+                <div class="extras-section">
+                    <div class="section-card">
+                        <div class="section-header">
+                        </div>
+                        <div class="educational-content">
+                            <h3 data-translate="videosAndWebsTitle">Vídeos i Webs d'Educació Financera</h3>
+                            <div class="educational-resources">
+                                <div class="resource-category">
+                                    <h4>📺 <span data-translate="youtubeChannelsTitle">Canals de YouTube especialitzats</span></h4>
+                                    <div class="resource-grid">
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="davidForcadaTitle">David Forcada</h5>
+                                            <p data-translate="davidForcadaDescription">Creador de contingut d'educació financera especialitzat en gestió de finances personals i estratègies d'inversió.</p>
+                                            <div class="resource-links">
+                                                <a href="https://www.youtube.com/@Davidforcadafinances/featured" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fab fa-youtube"></i>
+                                                    <span data-translate="visitChannelText">Visitar Canal</span>
+                                                </a>
+                                                <a href="https://www.instagram.com/davidforcadafinances/" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fab fa-instagram"></i>
+                                                    <span>Instagram</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="celiaRubioTitle">Celia Rubio</h5>
+                                            <p data-translate="celiaRubioDescription">Canal de YouTube dedicat a l'educació financera amb contingut pràctic sobre estalvi, inversions i planificació financera personal.</p>
+                                            <a href="https://www.youtube.com/channel/UCPgDrxtJG3lLjIqMffV6D0w" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="visitChannelText">Visitar Canal</span>
+                                            </a>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="elizabethWakefieldTitle">Elizabeth Wakefield - Finances Conscients</h5>
+                                            <p data-translate="elizabethWakefieldDescription">Experta en educació financera especialitzada en finances conscients. Ofereix contingut integral sobre planificació financera, inversions i consciència financera.</p>
+                                            <div class="resource-links">
+                                                <a href="https://www.youtube.com/@elizabeth.finanzasconscientes" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fab fa-youtube"></i>
+                                                    <span data-translate="visitChannelText">YouTube</span>
+                                                </a>
+                                                <a href="https://elizabeth-wakefield.com/" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fas fa-globe"></i>
+                                                    <span data-translate="visitWebsiteText">Web</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="sergiTorrensTitle">Sergi Torrens</h5>
+                                            <p data-translate="sergiTorrensDescription">Creador de contingut financer i educador que ofereix perspectives sobre finances personals, inversions i estratègies econòmiques.</p>
+                                            <div class="resource-links">
+                                                <a href="https://www.youtube.com/c/sergitorrens" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fab fa-youtube"></i>
+                                                    <span data-translate="visitChannelText">YouTube</span>
+                                                </a>
+                                                <a href="https://sergitorrens.com" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                    <i class="fas fa-globe"></i>
+                                                    <span data-translate="visitWebsiteText">Web</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="valueSchoolTitle">Value School</h5>
+                                            <p data-translate="valueSchoolDescription">Canal educatiu enfocat en inversió de valor, anàlisi de mercats financers i estratègies d'inversió per a la construcció de riquesa a llarg termini.</p>
+                                            <a href="https://www.youtube.com/ValueSchool" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="visitChannelText">Visitar Canal</span>
+                                            </a>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fab fa-youtube"></i>
+                                            </div>
+                                            <h5 data-translate="economipediaTitle">Economipedia</h5>
+                                            <p data-translate="economipediaDescription">Plataforma educativa dedicada a l'economia i les finances, que ofereix explicacions completes de conceptes financers i dinàmiques del mercat.</p>
+                                            <a href="https://www.youtube.com/@Economipedia/featured" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="visitChannelText">Visitar Canal</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="resource-category">
+                                    <h4>🌐 <span data-translate="websitePlatformsTitle">Webs i Plataformes</span></h4>
+                                    <div class="resource-grid">
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fas fa-university"></i>
+                                            </div>
+                                            <h5 data-translate="bancEspanyaTitle">Banc d'Espanya - Educació Financera</h5>
+                                            <p data-translate="bancEspanyaDescription">Portal oficial amb guies i recursos per millorar la cultura financera</p>
+                                            <a href="https://www.bde.es/wbe/es/areas-actuacion/educacion-financiera/" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="visitText">Visitar</span>
+                                            </a>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <h5 data-translate="finectTitle">Finect</h5>
+                                            <p data-translate="finectDescription">Plataforma d'educació financera amb articles, cursos i eines pràctiques</p>
+                                            <a href="https://www.finect.com/" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="visitText">Visitar</span>
+                                            </a>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fas fa-piggy-bank"></i>
+                                            </div>
+                                            <h5 data-translate="helpMyCashTitle">HelpMyCash</h5>
+                                            <p data-translate="helpMyCashDescription">Comparador de productes financers amb guies educatives per prendre millors decisions</p>
+                                            <a href="https://www.helpmycash.com/blog/" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="educationalBlogText">Blog Educatiu</span>
+                                            </a>
+                                        </div>
+                                        <div class="resource-card">
+                                            <div class="resource-icon">
+                                                <i class="fas fa-graduation-cap"></i>
+                                            </div>
+                                            <h5 data-translate="courseraTitle">Coursera - Finances Personals</h5>
+                                            <p data-translate="courseraDescription">Cursos universitaris sobre gestió financera personal i inversions</p>
+                                            <a href="https://www.coursera.org/search?query=personal%20finance&" target="_blank" rel="noopener noreferrer" class="resource-link">
+                                                <i class="fas fa-external-link-alt"></i>
+                                                <span data-translate="searchCoursesText">Cercar Cursos</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compound Calculator Page -->
+        <div id="compound-calculator" class="page">
+            <div class="page-header">
+                <button class="back-btn" data-page="extras">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-translate="backToExtras">Tornar a Extras</span>
+                </button>
+                <h1 data-translate="compoundInterestCalculator">Calculadora d'Interès Compost</h1>
+            </div>
+            
+            <div class="extras-content">
+                <div class="extras-section">
+                    <div class="section-card">
+                        <div class="calculator-container">
+                            <!-- Calculator Mode Selector -->
+                            <div class="calculator-mode-selector">
+                                <label for="calculatorMode" data-translate="selectCalculationType">Select what you want to calculate:</label>
+                                <select id="calculatorMode" class="calculator-select">
+                                    <option value="finalCapital" data-translate="calcFinalCapital">How much will I accumulate?</option>
+                                    <option value="timeToGoal" data-translate="calcTimeToGoal">How long will it take?</option>
+                                    <option value="requiredContribution" data-translate="calcRequiredContribution">How much do I need to contribute?</option>
+                                    <option value="requiredRate" data-translate="calcRequiredRate">What interest rate do I need?</option>
+                                </select>
+                            </div>
+
+                            <!-- Input Form -->
+                            <form id="compoundCalculatorForm" class="calculator-form">
+                                <div class="form-grid">
+                                    <div class="input-group">
+                                        <label for="initialCapital" data-translate="initialCapital">Initial Capital (€):</label>
+                                        <input type="number" id="initialCapital" min="0" step="0.01" value="10000">
+                                    </div>
+
+                                    <div class="input-group" id="periodicContributionGroup">
+                                        <label for="periodicContribution" data-translate="periodicContribution">Periodic Contribution (€):</label>
+                                        <input type="number" id="periodicContribution" min="0" step="0.01" value="200">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="contributionFrequency" data-translate="contributionFrequency">Contribution Frequency:</label>
+                                        <select id="contributionFrequency">
+                                            <option value="monthly" data-translate="monthly">Monthly</option>
+                                            <option value="quarterly" data-translate="quarterly">Quarterly</option>
+                                            <option value="annual" data-translate="annual">Annual</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="paymentTiming" data-translate="paymentTiming">Payment Timing:</label>
+                                        <select id="paymentTiming">
+                                            <option value="end" data-translate="endOfPeriod">End of Period</option>
+                                            <option value="beginning" data-translate="beginningOfPeriod">Beginning of Period</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="input-group" id="annualRateGroup">
+                                        <label for="annualRate" data-translate="annualInterestRate">Annual Interest Rate (%):</label>
+                                        <input type="number" id="annualRate" min="0" max="100" step="0.01" value="8">
+                                    </div>
+
+                                    <div class="input-group" id="yearsGroup">
+                                        <label for="years" data-translate="investmentYears">Investment Period (years):</label>
+                                        <input type="number" id="years" min="0" max="60" step="0.1" value="25">
+                                    </div>
+
+                                    <div class="input-group" id="targetAmountGroup" style="display: none;">
+                                        <label for="targetAmount" data-translate="targetAmount">Target Amount (€):</label>
+                                        <input type="number" id="targetAmount" min="0" step="0.01" value="500000">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary calculator-btn">
+                                    <i class="fas fa-calculator"></i>
+                                    <span data-translate="calculate">Calculate</span>
+                                </button>
+                            </form>
+
+                            <!-- Results Display -->
+                            <div id="calculatorResults" class="calculator-results" style="display: none;">
+                                <div class="results-main-display">
+                                    <div class="main-result">
+                                        <div class="main-result-label" data-translate="canSaveLabel">You can save</div>
+                                        <div class="main-result-amount" id="finalAmountResult">€0.00</div>
+                                        <div class="main-result-subtitle" id="calculationSummary">saving monthly for years</div>
+                                    </div>
+                                </div>
+
+                                <div class="results-breakdown">
+                                    <div class="breakdown-item initial-balance">
+                                        <div class="breakdown-color"></div>
+                                        <div class="breakdown-label" data-translate="initialBalance">Initial Balance:</div>
+                                        <div class="breakdown-amount" id="initialBalanceResult">€0.00</div>
+                                    </div>
+                                    <div class="breakdown-item periodic-deposits">
+                                        <div class="breakdown-color"></div>
+                                        <div class="breakdown-label" data-translate="totalContributions">Total Contributions:</div>
+                                        <div class="breakdown-amount" id="totalContributionsResult">€0.00</div>
+                                    </div>
+                                    <div class="breakdown-item total-interest">
+                                        <div class="breakdown-color"></div>
+                                        <div class="breakdown-label" data-translate="totalInterest">Total Interest:</div>
+                                        <div class="breakdown-amount" id="totalInterestResult">€0.00</div>
+                                    </div>
+                                </div>
+
+                                <div class="results-charts-vertical">
+                                    <div class="chart-container-large">
+                                        <h4 data-translate="contributionsVsInterest">Contributions vs Interest</h4>
+                                        <canvas id="compositionChart" width="600" height="400"></canvas>
+                                    </div>
+                                    <div class="chart-container-large">
+                                        <h4 data-translate="growthEvolution">Growth Evolution</h4>
+                                        <canvas id="evolutionChart" width="600" height="400"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="evolution-table-container">
+                                    <h4 data-translate="yearlyEvolution">Yearly Evolution</h4>
+                                    <div class="table-wrapper">
+                                        <table id="evolutionTable" class="evolution-table">
+                                            <thead>
+                                                <tr>
+                                                    <th data-translate="year">Year</th>
+                                                    <th data-translate="initialBalance">Initial Balance</th>
+                                                    <th data-translate="contribution">Contribution</th>
+                                                    <th data-translate="interest">Interest</th>
+                                                    <th data-translate="finalBalance">Final Balance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="evolutionTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="calculation-summary">
+                                    <h4 data-translate="calculationParameters">Calculation Parameters</h4>
+                                    <div id="parametersSummary" class="parameters-summary">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Educational Info -->
+                            <div class="calculator-info">
+                                <div class="info-card">
+                                    <h4><i class="fas fa-info-circle"></i> <span data-translate="compoundInterestConcept">Compound Interest Concept</span></h4>
+                                    <p data-translate="compoundInterestExplanation">Compound interest is the interest on a loan or deposit calculated based on both the initial principal and the accumulated interest from previous periods. It's the "snowball effect" that makes your money grow exponentially over time.</p>
+                                </div>
+                                <div class="info-card warning">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> <span data-translate="disclaimer">Important Disclaimer</span></h4>
+                                    <p data-translate="calculatorDisclaimer">These calculations are hypothetical projections. Actual results may vary due to market fluctuations, fees, taxes, and other factors. Always consult with a financial advisor before making investment decisions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page">
+            <h1 data-translate="myProfile">My Profile</h1>
+            <div class="profile-content">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileUsername"></h2>
+                        <p><span data-translate="level">Level</span> <span id="profileLevel">1</span> <span data-translate="financialExplorerLevel">Financial Explorer</span></p>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label" data-translate="totalXP">Total XP:</span>
+                        <span class="stat-value" id="profileXP">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-translate="quizzesCompleted">Quizzes Completed:</span>
+                        <span class="stat-value" id="profileQuizzes">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-translate="challengesCompleted">Challenges Completed:</span>
+                        <span class="stat-value" id="profileChallenges">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" data-translate="badgesEarned">Badges Earned:</span>
+                        <span class="stat-value" id="profileBadges">0</span>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <div class="language-selector-profile">
+                        <label for="profileLanguageSelect" data-translate="selectLanguage">Select Language:</label>
+                        <select id="profileLanguageSelect">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="ca">Català</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-danger" id="resetDataBtn" data-translate="resetAllData">Reset All Data</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="incomeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 data-translate="addIncome">Add Income</h2>
+            <form id="incomeForm">
+                <input type="number" id="incomeAmount" data-translate-placeholder="amount" placeholder="Amount (€)" step="0.01" required>
+                <select id="incomeCategory" required>
+                    <option value="" data-translate="selectCategory">Select Category</option>
+                    <option value="salary" data-translate="salary">Salary</option>
+                    <option value="pocket_money" data-translate="pocketMoney">Pocket money</option>
+                    <option value="side_job" data-translate="sideJob">Side job</option>
+                    <option value="gift" data-translate="gift">Gift</option>
+                    <option value="other" data-translate="other">Other</option>
+                </select>
+                <input type="text" id="incomeSource" data-translate-placeholder="sourceDescription" placeholder="Source description" required>
+                <input type="date" id="incomeDate" required>
+                <button type="submit" class="btn btn-success" data-translate="addIncome">Add Income</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 data-translate="addExpense">Add Expense</h2>
+            <form id="expenseForm">
+                <input type="number" id="expenseAmount" data-translate-placeholder="amount" placeholder="Amount (€)" step="0.01" required>
+                <select id="expenseCategory" required>
+                    <option value="" data-translate="selectCategory">Select Category</option>
+                    <option value="fixed" data-translate="fixed">Fixed (Transport, Subscriptions)</option>
+                    <option value="variable" data-translate="variable">Variable (Food, Clothes, Leisure)</option>
+                    <option value="gasto_hormiga" data-translate="gastoHormiga">Gasto hormiga (Coffee, Snacks)</option>
+                </select>
+                <input type="text" id="expenseDescription" data-translate-placeholder="description" placeholder="Description" required>
+                <input type="date" id="expenseDate" required>
+                <button type="submit" class="btn btn-danger" data-translate="addExpense">Add Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="quizContent">
+                <!-- Quiz content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="groupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="groupModalContent">
+                <!-- Group modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- XP Notification -->
+    <div id="xpNotification" class="xp-notification">
+        <i class="fas fa-star"></i>
+        <span id="xpNotificationText">+10 XP!</span>
+    </div>
+
+    <!-- Corner Notification -->
+    <div id="cornerNotification" class="corner-notification">
+        <div id="cornerNotificationIcon" class="corner-notification-icon"></div>
+        <div class="corner-notification-content">
+            <div id="cornerNotificationTitle" class="corner-notification-title"></div>
+            <p id="cornerNotificationMessage" class="corner-notification-message"></p>
+        </div>
+    </div>
+
+    <!-- Custom Notification Modal -->
+    <div id="customNotificationModal" class="modal">
+        <div class="modal-content notification-modal">
+            <div id="notificationIcon" class="notification-icon"></div>
+            <h2 id="notificationTitle"></h2>
+            <p id="notificationMessage"></p>
+            <button id="notificationOkBtn" class="btn btn-primary">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Environment configuration for static app
+        window.ENV = {};
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

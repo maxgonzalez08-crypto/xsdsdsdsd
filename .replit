@@ -1,0 +1,98 @@
+run = "vite"
+entrypoint = "index.html"
+hidden = [".config"]
+modules = ["nodejs-18", "web"]
+
+[nix]
+channel = "stable-23_05"
+
+[deployment]
+deploymentTarget = "static"
+build = ["npm", "run", "build"]
+publicDir = "dist"
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Start Backend"
+author = 46870614
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node server.js"
+
+[[workflows.workflow]]
+name = "Start Full App"
+author = 46870614
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node server.js"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx vite --host 0.0.0.0 --port 3000"
+
+[[workflows.workflow]]
+name = "Static App"
+author = 46926302
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx vite --host 0.0.0.0 --port 3000"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Frontend"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "API Server"
+
+[[workflows.workflow]]
+name = "Frontend"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "API Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run api"
+waitForPort = 3001
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[agent]
+expertMode = true
